@@ -2,10 +2,8 @@ name: YARMM
 version: '${version}'
 main: io.tanguygab.yarmm.YARMM
 author: Tanguygab
-depend: [TAB]
+depend: [TAB, ConditionalActions]
 api-version: '1.21'
-libraries:
-  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}
 commands:
   yarmm:
     permission: yarmm.admin

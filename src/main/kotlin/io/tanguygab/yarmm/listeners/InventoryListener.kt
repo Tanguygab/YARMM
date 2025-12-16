@@ -1,6 +1,6 @@
-package io.tanguygab.yarmm.internal.listeners
+package io.tanguygab.yarmm.listeners
 
-import io.tanguygab.yarmm.api.MenuManager
+import io.tanguygab.yarmm.MenuManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent

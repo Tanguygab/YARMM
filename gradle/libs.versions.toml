@@ -1,6 +1,8 @@
 [versions]
 kotlin = "2.3.0-RC3"
 paper = "1.21.11-R0.1-SNAPSHOT"
+conditionalactions = "1.4.0"
 
 [libraries]
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+conditionalactions = { group = "io.github.tanguygab", name = "ConditionalActions", version.ref = "conditionalactions" }

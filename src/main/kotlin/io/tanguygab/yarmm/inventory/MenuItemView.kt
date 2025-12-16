@@ -1,7 +1,7 @@
-package io.tanguygab.yarmm.internal.inventory
+package io.tanguygab.yarmm.inventory
 
-import io.tanguygab.yarmm.api.inventory.MenuItem
-import io.tanguygab.yarmm.internal.MenuData
+import io.tanguygab.yarmm.MenuData
+import io.tanguygab.yarmm.config.MenuItemConfig
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.features.types.RefreshableFeature
 import me.neznamy.tab.shared.platform.TabPlayer
@@ -14,7 +14,7 @@ import kotlin.text.split
 import kotlin.text.toIntOrNull
 
 class MenuItemView(
-    config: MenuItem,
+    config: MenuItemConfig,
     val slot: String,
     player: TabPlayer,
     val data: MenuData

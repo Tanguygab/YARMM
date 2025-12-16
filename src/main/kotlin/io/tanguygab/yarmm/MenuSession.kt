@@ -1,30 +1,27 @@
-package io.tanguygab.yarmm.internal
+package io.tanguygab.yarmm
 
-import io.tanguygab.yarmm.YARMM
-import io.tanguygab.yarmm.api.MenuSession
-import io.tanguygab.yarmm.api.inventory.MenuInventory
-import io.tanguygab.yarmm.internal.inventory.MenuItemView
+import io.tanguygab.yarmm.inventory.MenuInventory
+import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.TAB
 import me.neznamy.tab.shared.features.types.RefreshableFeature
 import me.neznamy.tab.shared.platform.TabPlayer
-import org.bukkit.entity.Player
 
-class MenuSessionImpl(
-    override val player: TabPlayer,
-    override val menu: MenuInventory
-) : RefreshableFeature(), MenuSession {
+class MenuSession(
+    val plugin: YARMM,
+    val player: TabPlayer,
+    val menu: MenuInventory
+) : RefreshableFeature() {
 
     override fun getFeatureName() = "YARMM"
     override fun getRefreshDisplayName() = "Updating menu title"
 
-    val data = MenuData(Property(this, player, menu.title))
+    val data = MenuData(Property(this, player, menu.config.title))
 
-    //override val page = menu.pages[0]
     val items = mutableListOf<MenuItemView>()
 
     init {
-        menu.items.forEach { item ->
+        menu.config.items.forEach { item ->
             item.slots.forEach { slot ->
                 val i = MenuItemView(item, slot, player, data)
                 items.add(i)
@@ -35,9 +32,10 @@ class MenuSessionImpl(
         refresh(player, true)
     }
 
-    override fun close() {
-        val p = player.player as Player
-        p.closeInventory()
+    fun close() {
+        if (!menu.config.closeActions.execute(player.bukkit)) return
+
+        player.bukkit.closeInventory()
         items.forEach {
             TAB.getInstance().featureManager.unregisterFeature("menu-item-${player.name}-${it.slot}")
         }
@@ -49,9 +47,7 @@ class MenuSessionImpl(
             val inventory = menu.get(player, data)
             items.forEach { it.inventory = inventory }
 
-
-            val p = player.player as Player
-            p.scheduler.run(YARMM.INSTANCE, { p.openInventory(inventory) }, null)
+            player.bukkit.scheduler.run(plugin, { player.bukkit.openInventory(inventory) }, null)
 
         }
     }
