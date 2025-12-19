@@ -51,7 +51,7 @@ class YARMM : JavaPlugin() {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         if (sender is Player && args.isNotEmpty() && args[0] in menuManager.menus) {
             val menu = menuManager.menus[args[0]]!!
-            menuManager.openMenu(sender.tab!!, menu)
+            menuManager.openMenu(sender.tab!!, menu, args.copyOfRange(1, args.size).toList())
         }
         return true
     }
