@@ -39,6 +39,7 @@ class MenuSession(
         bukkit.scheduler.run(plugin, { bukkit.openInventory(inventory) }, null)
     }
     fun TabPlayer.closeInventory() {
+        if (plugin.server.isStopping) return
         bukkit.scheduler.run(plugin, { bukkit.closeInventory(InventoryCloseEvent.Reason.DISCONNECT) }, null)
     }
 

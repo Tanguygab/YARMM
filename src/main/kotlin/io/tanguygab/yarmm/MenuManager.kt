@@ -37,13 +37,17 @@ class MenuManager(val plugin: YARMM) {
     fun openMenu(player: TabPlayer, menu: MenuInventory): MenuSession? {
         if (!closeMenu(player, MenuCloseReason.OPEN_NEW)) return sessions[player]
 
-        if (!menu.config.openActions.execute(player.bukkit)) return null
+        if (!menu.config.openActions.execute(player.bukkit)) {
+            sessions[player]?.close(MenuCloseReason.UNLOAD)
+            sessions.remove(player)
+            return null
+        }
 
         return MenuSession(plugin, player, menu).apply { sessions[player] = this }
     }
 
     fun closeMenu(player: TabPlayer, reason: MenuCloseReason): Boolean {
         if (player !in sessions) return true
-        return sessions[player]?.close(reason) == true && sessions.remove(player) != null
+        return sessions[player]?.close(reason) == true && (reason == MenuCloseReason.OPEN_NEW || sessions.remove(player) != null)
     }
 }
