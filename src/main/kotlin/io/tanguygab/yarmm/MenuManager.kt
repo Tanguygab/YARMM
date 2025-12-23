@@ -78,7 +78,7 @@ class MenuManager(val plugin: YARMM) {
     fun closeMenu(player: TabPlayer, reason: MenuCloseReason): Boolean {
         if (player !in sessions) return true
         if (sessions[player]?.close(reason) != true) return false
-        if (reason == MenuCloseReason.OPEN_NEW) return true
+        if (reason === MenuCloseReason.OPEN_NEW) return true
 
         updatePlaceholders(player, emptyList())
         sessions.remove(player)

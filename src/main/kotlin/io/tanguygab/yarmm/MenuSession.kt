@@ -67,7 +67,7 @@ class MenuSession(
     }
 
     override fun refresh(player: TabPlayer, force: Boolean) {
-        if (force || data.title.update()) {
+        if (player === this.player && (force || data.title.update())) {
             inventory = menu.get(player, data)
             items.forEach { it.inventory = inventory }
 

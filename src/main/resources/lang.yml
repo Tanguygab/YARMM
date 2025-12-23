@@ -1,0 +1,15 @@
+commands:
+  list:
+    header: "<total> <white>Menus <dark_gray>(<white><page><dark_gray>/<gray><pages><dark_gray>):"
+    line: "\n <dark_gray>- <gray><menu>"
+    hover:
+      - "<gray>Click to open!"
+      - "Shift+click to suggest."
+
+  open:
+    success: "<green>Menu opened for player <dark_green><player>!"
+
+  generate-commands:
+    success: "<green>Successfully generated commands for menus based on their names."
+
+  help:

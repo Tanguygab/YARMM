@@ -4,9 +4,3 @@ main: io.tanguygab.yarmm.YARMM
 author: Tanguygab
 depend: [TAB, ConditionalActions]
 api-version: '1.21'
-commands:
-  yarmm:
-    permission: yarmm.admin
-    aliases:
-      - mm
-      - menus

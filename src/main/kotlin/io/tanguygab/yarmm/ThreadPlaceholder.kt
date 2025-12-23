@@ -8,7 +8,7 @@ class ThreadPlaceholder(identifier: String) : TabPlaceholder(identifier, -1) {
     private val lastPlaceholderValues = mutableMapOf<Thread, String>()
 
     fun updateValue(value: String?) {
-        if (value == null) lastPlaceholderValues.remove(Thread.currentThread())
+        if (value === null) lastPlaceholderValues.remove(Thread.currentThread())
         else lastPlaceholderValues[Thread.currentThread()] = value
     }
 

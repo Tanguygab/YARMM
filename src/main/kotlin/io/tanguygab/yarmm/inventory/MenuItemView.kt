@@ -50,6 +50,7 @@ class MenuItemView(
     }
 
     override fun refresh(player: TabPlayer, force: Boolean) {
+        if (player !== session.player) return
         val oldSlot = getSlot()
 
         data.viewConditions[this]?.update()

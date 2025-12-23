@@ -13,7 +13,7 @@ class MenuInventory(val config: MenuConfig) {
     fun get(player: TabPlayer, data: MenuData): Inventory {
         val title = MiniMessage.miniMessage().deserialize(data.title.get())
 
-        return if (config.type == InventoryType.CHEST)
+        return if (config.type === InventoryType.CHEST)
             Bukkit.createInventory(player.bukkit, config.rows * 9, title)
         else Bukkit.createInventory(player.bukkit, config.type, title)
     }

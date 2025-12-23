@@ -28,7 +28,7 @@ class InventoryListener(val plugin: YARMM) : Listener {
 
     @EventHandler
     fun onMenuClose(e: InventoryCloseEvent) {
-        if (e.reason == InventoryCloseEvent.Reason.OPEN_NEW) return
+        if (e.reason === InventoryCloseEvent.Reason.OPEN_NEW) return
 
         val player = e.player
         if (player !is Player || player.tab !in sessions) return
