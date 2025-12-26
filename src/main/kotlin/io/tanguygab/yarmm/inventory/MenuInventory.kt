@@ -2,7 +2,7 @@ package io.tanguygab.yarmm.inventory
 
 import io.tanguygab.yarmm.MenuData
 import io.tanguygab.yarmm.bukkit
-import io.tanguygab.yarmm.config.MenuConfig
+import io.tanguygab.yarmm.config.menu.MenuConfig
 import me.neznamy.tab.shared.platform.TabPlayer
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit

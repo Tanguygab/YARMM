@@ -1,13 +1,13 @@
 package io.tanguygab.yarmm.inventory
 
-import io.tanguygab.yarmm.MenuData
 import io.tanguygab.yarmm.MenuSession
-import io.tanguygab.yarmm.config.MenuItemConfig
+import io.tanguygab.yarmm.config.menu.MenuItemConfig
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.features.types.RefreshableFeature
 import me.neznamy.tab.shared.platform.TabPlayer
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.IdentityHashMap
@@ -42,10 +42,18 @@ class MenuItemView(
                 data.amounts to config.amount,
                 data.names to config.name,
                 data.lores to config.lore.joinToString("\n"),
-
             ))
             if (config.viewCondition != null) put(data.viewConditions, "%ca-condition:${config.viewCondition.name}%")
         }.forEach { (map, raw) -> map[this] = Property(this, session.player, raw.replace("{slot}", slot)) }
+
+        val enchantments = mutableMapOf<Property, Property>()
+        config.enchantments.forEach { (enchant, level) ->
+            val key = Property(this, session.player, enchant.replace("{slot}", slot))
+            val value = Property(this, session.player, level.replace("{slot}", slot))
+            enchantments[key] = value
+        }
+        data.enchantments[this] = enchantments
+
         refresh(session.player, true)
     }
 
@@ -68,6 +76,18 @@ class MenuItemView(
 
         val name = data.names[this]!!
         val lore = data.lores[this]!!
+
+        @Suppress("DEPRECATION")
+        data.enchantments[this]!!.forEach { (enchant, level) ->
+            val old = enchant.get()
+            if (!enchant.update().or(level.update()) && !force) return@forEach
+
+            val oldType = Enchantment.getByName(old)
+            val type = Enchantment.getByName(enchant.get())
+
+            if (oldType != type && oldType != null) item.removeEnchantment(oldType)
+            if (type != null) item.addUnsafeEnchantment(type, level.get().toIntOrNull() ?: 0)
+        }
 
         item.itemMeta = item.itemMeta.apply {
             if (force || name.update()) displayName(mm.deserialize(name.get()))

@@ -1,7 +1,7 @@
 package io.tanguygab.yarmm
 
 import io.github.tanguygab.conditionalactions.hook.tab.ArgPlaceholders
-import io.tanguygab.yarmm.config.MenuConfig
+import io.tanguygab.yarmm.config.menu.MenuConfig
 import io.tanguygab.yarmm.inventory.MenuInventory
 import me.neznamy.tab.shared.config.file.YamlConfigurationFile
 import me.neznamy.tab.shared.placeholders.types.PlayerPlaceholderImpl
@@ -22,7 +22,7 @@ class MenuManager(val plugin: YARMM) {
                 return
             }
             if (!it.name.endsWith(".yml")) return
-            menus[it.name.substringBeforeLast(".yml")] = MenuInventory(MenuConfig(it, plugin.config))
+            menus[it.name.substringBeforeLast(".yml")] = MenuInventory(MenuConfig.fromFile(it, plugin.config))
         }
     }
 
