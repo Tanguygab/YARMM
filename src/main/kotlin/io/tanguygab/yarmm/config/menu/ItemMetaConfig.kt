@@ -12,7 +12,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.meta.ItemMeta
 import kotlin.reflect.KClass
 
-abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>, val section: ConfigurationSection) {
+abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
     abstract fun storeData(item: MenuItemView, player: TabPlayer): Map<String, Property>
     abstract fun refresh(meta: ItemMeta, data: Map<String, Property>, force: Boolean)
 
