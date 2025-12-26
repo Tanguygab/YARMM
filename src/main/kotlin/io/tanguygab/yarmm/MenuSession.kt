@@ -1,5 +1,6 @@
 package io.tanguygab.yarmm
 
+import io.tanguygab.yarmm.config.menu.ItemMetaConfig
 import io.tanguygab.yarmm.inventory.MenuInventory
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
@@ -85,4 +86,5 @@ data class MenuData(
     val slots: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val viewConditions: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val enchantments: MutableMap<MenuItemView, Map<Property, Property>> = mutableMapOf(),
+    val meta: MutableMap<MenuItemView, Map<ItemMetaConfig, Map<String, Property>>> = mutableMapOf(),
 )

@@ -16,26 +16,26 @@ data class MenuItemConfig(
     val clickActions: ActionGroup,
     val viewCondition: ConditionGroup?,
 
-    val enchantments: Map<String, String>
+    val enchantments: Map<String, String>,
+    val metas: List<ItemMetaConfig>
 ) {
     companion object {
-        fun fromSection(section: ConfigurationSection, config: MainConfig): MenuItemConfig {
-            return MenuItemConfig(
-                material = section.getString("material") ?: "STONE",
-                name = config.itemNamePrefix + (section.getString("name") ?: ""),
-                amount = section.getString("amount") ?: "1",
-                lore = section.getStringList("lore")?.map { config.itemLorePrefix + it} ?: emptyList(),
-                slots = getSlotRanges(section),
+        fun fromSection(section: ConfigurationSection, config: MainConfig) = MenuItemConfig(
+            material = section.getString("material") ?: "STONE",
+            name = config.itemNamePrefix + (section.getString("name") ?: ""),
+            amount = section.getString("amount") ?: "1",
+            lore = section.getStringList("lore")?.map { config.itemLorePrefix + it} ?: emptyList(),
+            slots = getSlotRanges(section),
 
-                clickActions = getActionGroup(section.getObject("click-actions") ?: emptyList<Any>()),
-                viewCondition = section.getString("view-condition")?.let { ConditionGroup(ConditionalActions.INSTANCE.conditionManager, it) },
+            clickActions = getActionGroup(section.getObject("click-actions") ?: emptyList<Any>()),
+            viewCondition = section.getString("view-condition")?.let { ConditionGroup(ConditionalActions.INSTANCE.conditionManager, it) },
 
-                enchantments = section.getMap<String, Any>("enchantments")
-                    ?.map { (key, value) -> key to value.toString() }
-                    ?.toMap()
-                    ?: emptyMap()
-            )
-        }
+            enchantments = section.getMap<String, Any>("enchantments")
+                ?.map { (key, value) -> key to value.toString() }
+                ?.toMap()
+                ?: emptyMap(),
+            metas = ItemMetaConfig.fromItem(section)
+        )
 
         private fun getSlotRanges(section: ConfigurationSection): List<String> {
             val slots = section.getStringList("slots")?.toMutableList()

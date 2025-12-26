@@ -54,6 +54,8 @@ class MenuItemView(
         }
         data.enchantments[this] = enchantments
 
+        data.meta[this] = config.metas.associateWith { it.storeData(this, session.player) }
+
         refresh(session.player, true)
     }
 
@@ -94,6 +96,9 @@ class MenuItemView(
             if (force || lore.update()) {
                 lore(if (lore.get().isEmpty()) listOf() else lore.get().split("\n").map { mm.deserialize(it) })
             }
+            config.metas
+                .filter { it.isMeta(this) }
+                .forEach { it.refresh(this, data.meta[this@MenuItemView]!![it]!!, force) }
         }
         if (visible) inventory?.setItem(getSlot(), item)
     }
