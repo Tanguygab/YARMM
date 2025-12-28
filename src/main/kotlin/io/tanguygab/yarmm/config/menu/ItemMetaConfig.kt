@@ -45,7 +45,7 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
 //            "BundleMeta" to null
 
 //            "MapMeta" to null,
-//            "PotionMeta" to null,
+            "potion" to PotionMetaConfig::class,
         )
         fun fromItem(item: ConfigurationSection) = types
             .filter { it.key in item.keys }

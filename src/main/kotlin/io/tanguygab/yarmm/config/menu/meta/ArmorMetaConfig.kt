@@ -37,12 +37,10 @@ class ArmorMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ArmorMeta:
         if (meta !is LeatherArmorMeta) return
         val color = data["color"]!!
         if (!color.update() && !force) return
-        try {
+        meta.setColor(try {
             val rgb = color.get().removePrefix("#").hexToInt()
-            meta.setColor(Color.fromRGB(rgb))
-        } catch (_: Exception) {
-            meta.setColor(null)
-        }
+            Color.fromRGB(rgb)
+        } catch (_: Exception) { null })
     }
 
 }
