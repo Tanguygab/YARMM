@@ -20,11 +20,11 @@ data class MenuItemConfig(
     val metas: List<ItemMetaConfig>
 ) {
     companion object {
-        fun fromSection(section: ConfigurationSection, config: MainConfig) = MenuItemConfig(
+        fun fromSection(section: ConfigurationSection) = MenuItemConfig(
             material = section.getString("material") ?: "STONE",
-            name = config.itemNamePrefix + (section.getString("name") ?: ""),
+            name = section.getString("name") ?: "",
             amount = section.getString("amount") ?: "1",
-            lore = section.getStringList("lore")?.map { config.itemLorePrefix + it} ?: emptyList(),
+            lore = section.getStringList("lore") ?: emptyList(),
             slots = getSlotRanges(section),
 
             clickActions = getActionGroup(section.getObject("click-actions") ?: emptyList<Any>()),

@@ -18,7 +18,7 @@ data class MenuConfig(
     val items: List<MenuItemConfig>
 ) {
     companion object {
-        fun fromFile(file: File, config: MainConfig): MenuConfig {
+        fun fromFile(file: File): MenuConfig {
             val file = YamlConfigurationFile(null, file)
             return MenuConfig(
                 title = file.getString("title", null) ?: "<red>No title set",
@@ -30,7 +30,7 @@ data class MenuConfig(
 
                 items = file.getMap<String, Any>("items").keys
                     .map { file.getConfigurationSection("items.$it") }
-                    .map { MenuItemConfig.fromSection(it, config) }
+                    .map { MenuItemConfig.fromSection(it) }
             )
         }
     }

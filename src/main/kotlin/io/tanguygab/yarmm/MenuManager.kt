@@ -22,7 +22,7 @@ class MenuManager(val plugin: YARMM) {
                 return
             }
             if (!it.name.endsWith(".yml")) return
-            menus[it.name.substringBeforeLast(".yml")] = MenuInventory(MenuConfig.fromFile(it, plugin.config))
+            menus[it.name.substringBeforeLast(".yml")] = MenuInventory(MenuConfig.fromFile(it))
         }
     }
 

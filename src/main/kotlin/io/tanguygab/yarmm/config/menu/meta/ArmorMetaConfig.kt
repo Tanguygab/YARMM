@@ -31,8 +31,7 @@ class ArmorMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ArmorMeta:
             val trimMaterial = material.getFromRegistry(RegistryKey.TRIM_MATERIAL)
             val trimPattern = pattern.getFromRegistry(RegistryKey.TRIM_PATTERN)
 
-            if (trimMaterial != null && trimPattern != null)
-                (meta as ArmorMeta).trim = ArmorTrim(trimMaterial, trimPattern)
+            (meta as ArmorMeta).trim = if (trimMaterial != null && trimPattern != null) ArmorTrim(trimMaterial, trimPattern) else null
         }
 
         if (meta !is LeatherArmorMeta) return
@@ -41,7 +40,9 @@ class ArmorMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ArmorMeta:
         try {
             val rgb = color.get().removePrefix("#").hexToInt()
             meta.setColor(Color.fromRGB(rgb))
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+            meta.setColor(null)
+        }
     }
 
 }

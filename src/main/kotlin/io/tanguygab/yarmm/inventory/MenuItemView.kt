@@ -92,9 +92,11 @@ class MenuItemView(
         }
 
         item.itemMeta = item.itemMeta.apply {
-            if (force || name.update()) displayName(mm.deserialize(name.get()))
+            if (force || name.update()) {
+                displayName(if (name.get().isEmpty()) null else mm.deserialize(session.plugin.config.itemNamePrefix + name.get()))
+            }
             if (force || lore.update()) {
-                lore(if (lore.get().isEmpty()) listOf() else lore.get().split("\n").map { mm.deserialize(it) })
+                lore(if (lore.get().isEmpty()) listOf() else lore.get().split("\n").map { mm.deserialize(session.plugin.config.itemNamePrefix + it) })
             }
             config.metas
                 .filter { it.isMeta(this) }
@@ -104,6 +106,6 @@ class MenuItemView(
     }
 
     companion object {
-        val mm = MiniMessage.miniMessage()
+        private val mm = MiniMessage.miniMessage()
     }
 }

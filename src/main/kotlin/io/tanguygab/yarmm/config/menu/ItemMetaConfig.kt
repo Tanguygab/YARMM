@@ -2,7 +2,7 @@ package io.tanguygab.yarmm.config.menu
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import io.tanguygab.yarmm.config.menu.meta.ArmorMetaConfig
+import io.tanguygab.yarmm.config.menu.meta.*
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.config.file.ConfigurationSection
@@ -29,11 +29,35 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
 
         val types = mutableMapOf(
             "armor" to ArmorMetaConfig::class,
+            "instrument" to InstrumentMetaConfig::class,
+            "head" to SkullMetaConfig::class,
+            "book" to BookMetaConfig::class,
+            "compass" to CompassMetaConfig::class,
+            "damage" to DamageableMetaConfig::class,
 
+//            "FireworkEffectMeta" to null,
+//            "FireworkMeta" to null,
+//
+            "patterns" to BannerMetaConfig::class,
+            "shield-color" to ShieldMetaConfig::class,
+//
+//            "CrossbowMeta" to null,
+//            "BundleMeta" to null
+
+//            "MapMeta" to null,
+//            "PotionMeta" to null,
         )
         fun fromItem(item: ConfigurationSection) = types
             .filter { it.key in item.keys }
-            .map { it.value.java.constructors.first().newInstance(item.getConfigurationSection(it.key)) as ItemMetaConfig }
+            .map {
+                val constructor = it.value.java.constructors.first()
+                val arg = when (constructor.parameterTypes.first()) {
+                    ConfigurationSection::class.java -> item.getConfigurationSection(it.key)
+                    List::class.java -> item.getStringList(it.key)
+                    else -> item.getObject(it.key).toString()
+                }
+                constructor.newInstance(arg) as ItemMetaConfig
+            }
     }
 }
 

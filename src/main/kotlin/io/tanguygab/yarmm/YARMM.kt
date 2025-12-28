@@ -48,7 +48,6 @@ class YARMM : JavaPlugin() {
         val menu = ctx.getArgument("menu", MenuInventory::class.java)
 
         player.resolve(ctx.source).forEach { p ->
-            print(p.name)
             menuManager.openMenu(p.tab!!, menu, args?.split(" ") ?: emptyList())
         }
         return Command.SINGLE_SUCCESS
