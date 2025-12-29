@@ -3,11 +3,11 @@ package io.tanguygab.yarmm.config.menu.meta
 import io.papermc.paper.registry.RegistryKey
 import io.tanguygab.yarmm.config.menu.ItemMetaConfig
 import io.tanguygab.yarmm.config.menu.getFromRegistry
+import io.tanguygab.yarmm.config.menu.toColor
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.config.file.ConfigurationSection
 import me.neznamy.tab.shared.platform.TabPlayer
-import org.bukkit.Color
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
@@ -31,10 +31,7 @@ class PotionMetaConfig(section: ConfigurationSection) : ItemMetaConfig(PotionMet
         if (type.update() || force) meta.basePotionType = PotionType.entries.find { it.name.equals(type.get(), ignoreCase = true) } ?: PotionType.WATER
 
         val color = data["color"]!!
-        if (color.update() || force) meta.color = try {
-            val rgb = color.get().removePrefix("#").hexToInt()
-            Color.fromRGB(rgb)
-        } catch (_: Exception) { null }
+        if (color.update() || force) meta.color = color.get().toColor()
 
         val effects = data["effects"]!!
         if (effects.update() || force) {

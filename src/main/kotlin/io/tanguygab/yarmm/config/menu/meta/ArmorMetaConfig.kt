@@ -3,11 +3,11 @@ package io.tanguygab.yarmm.config.menu.meta
 import io.papermc.paper.registry.RegistryKey
 import io.tanguygab.yarmm.config.menu.ItemMetaConfig
 import io.tanguygab.yarmm.config.menu.getFromRegistry
+import io.tanguygab.yarmm.config.menu.toColor
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.config.file.ConfigurationSection
 import me.neznamy.tab.shared.platform.TabPlayer
-import org.bukkit.Color
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
@@ -37,10 +37,7 @@ class ArmorMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ArmorMeta:
         if (meta !is LeatherArmorMeta) return
         val color = data["color"]!!
         if (!color.update() && !force) return
-        meta.setColor(try {
-            val rgb = color.get().removePrefix("#").hexToInt()
-            Color.fromRGB(rgb)
-        } catch (_: Exception) { null })
+        meta.setColor(color.get().toColor())
     }
 
 }

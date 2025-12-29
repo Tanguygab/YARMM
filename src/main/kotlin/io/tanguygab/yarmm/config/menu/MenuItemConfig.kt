@@ -4,6 +4,7 @@ import io.github.tanguygab.conditionalactions.ConditionalActions
 import io.github.tanguygab.conditionalactions.actions.ActionGroup
 import io.github.tanguygab.conditionalactions.conditions.ConditionGroup
 import me.neznamy.tab.shared.config.file.ConfigurationSection
+import org.bukkit.inventory.ItemFlag
 
 data class MenuItemConfig(
     val material: String,
@@ -16,6 +17,7 @@ data class MenuItemConfig(
     val displayCondition: ConditionGroup?,
 
     val enchantments: Map<String, String>,
+    val flags: List<ItemFlag>,
     val metas: List<ItemMetaConfig>
 ) {
     companion object {
@@ -33,6 +35,9 @@ data class MenuItemConfig(
                 ?.map { (key, value) -> key to value.toString() }
                 ?.toMap()
                 ?: emptyMap(),
+            flags = section.getStringList("flags")
+                ?.mapNotNull { ItemFlag.entries.find { flag -> flag.name.equals(it, ignoreCase = true) } }
+                ?: listOf(),
             metas = ItemMetaConfig.fromItem(section)
         )
 

@@ -12,8 +12,6 @@ import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.IdentityHashMap
-import kotlin.text.split
-import kotlin.text.toIntOrNull
 
 class MenuItemView(
     val config: MenuItemConfig,
@@ -72,7 +70,10 @@ class MenuItemView(
         }
 
         val material = data.materials[this]!!
-        if (force || material.update()) item = ItemStack(Material.getMaterial(material.get().uppercase()) ?: Material.STONE)
+        if (force || material.update()) {
+            item = ItemStack(Material.getMaterial(material.get().uppercase()) ?: Material.STONE)
+            item.addItemFlags(*config.flags.toTypedArray())
+        }
 
         val amount = data.amounts[this]!!
         if (force || amount.update()) item.amount = amount.get().toIntOrNull() ?: 1

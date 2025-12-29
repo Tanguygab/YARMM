@@ -2,6 +2,9 @@ package io.tanguygab.yarmm.converter
 
 import me.neznamy.tab.shared.config.file.ConfigurationSection
 import me.neznamy.tab.shared.config.file.YamlConfigurationFile
+import org.bukkit.Color
+import kotlin.text.contains
+import kotlin.text.split
 
 class DeluxeMenusConverter : PluginConverter("DeluxeMenus/gui_menus", "items") {
 
@@ -13,6 +16,14 @@ class DeluxeMenusConverter : PluginConverter("DeluxeMenus/gui_menus", "items") {
             }
         }
         return str
+    }
+
+    private fun String.hexFromRGB(): String? {
+        return if (!contains("%")) {
+            val arr = split(", ")
+            try { Integer.toHexString(Color.fromRGB(arr[0].toInt(), arr[1].toInt(), arr[2].toInt()).asRGB()) }
+            catch (_: Exception) { null }
+        } else this
     }
 
     override fun getArgs(input: YamlConfigurationFile): Map<String, String> {
@@ -35,6 +46,7 @@ class DeluxeMenusConverter : PluginConverter("DeluxeMenus/gui_menus", "items") {
         output["$path.slot"] = input.getObject("slot")?.toString()?.convertArgs(args)
         output["$path.slots"] = input.getStringList("slots")?.map { it.convertArgs(args) }
         output["$path.enchantments"] = input.getStringList("enchantments")?.map { it.split(";") }?.associate { it[0] to it[1] }
+        output["$path.flags"] = input.getStringList("item_flags")
 
         val clickActions = listOf("left", "right", "middle", "shift_left", "shift_right", "")
             .map { it to "${if(it.isEmpty()) "" else "${it}_"}click" }
@@ -56,6 +68,36 @@ class DeluxeMenusConverter : PluginConverter("DeluxeMenus/gui_menus", "items") {
         output["$path.click-actions"] = clickActions
 
         output["$path.display-condition"] = input.getMap<String, Any>("view_requirement")?.let { convertRequirementType(it, args) }
+
+        output["$path.damage"] = input.getObject("damage")?.toString()?.convertArgs(args)
+
+        output["$path.patterns"] = input.getStringList("banner_meta")?.map { it.split(";").reversed().joinToString(";").convertArgs(args) }
+        output["$path.shield-color"] = input.getString("base_color")?.convertArgs(args)
+
+        output["$path.armor.pattern"] = input.getString("trim_pattern")?.convertArgs(args)
+        output["$path.armor.material"] = input.getString("trim_material")?.convertArgs(args)
+        output["$path.armor.color"] = input.getString("rgb")?.hexFromRGB()?.convertArgs(args)
+
+        output["$path.potion.effects"] = input.getStringList("potion_effects")?.map { it.replace(";", " ").convertArgs(args) }
+
+        output["$path.model.key"] = input.getString("item_model")?.convertArgs(args)
+        listOf("floats", "flags", "strings", "colors").forEach { type ->
+            output["$path.model.data.$type"] = input
+                .getStringList("model_data_component.$type")
+                ?.mapNotNull { (if (type == "colors") it.hexFromRGB() else it)?.convertArgs(args) }
+        }
+
+        output["$path.tooltip.hide"] = input.getObject("hide_tooltip")?.toString()?.convertArgs(args)
+        output["$path.tooltip.style"] = input.getString("tooltip_style")?.convertArgs(args)
+        output["$path.tooltip.rarity"] = input.getString("rarity")?.convertArgs(args)
+        output["$path.tooltip.glow"] = input.getObject("enchantment_glint_override")?.toString()?.convertArgs(args)
+        output["$path.tooltip.unbreakable"] = input.getObject("unbreakable")?.toString()?.convertArgs(args)
+
+        output["$path.light-level"] = input.getObject("light_level")?.toString()?.convertArgs(args)
+
+        // priority should just sort items based on it before loading or saving
+        // lore append mode, todo after adding custom materials
+        // components?
     }
 
     override fun convertAction(input: String, args: Map<String, String>): String? {
