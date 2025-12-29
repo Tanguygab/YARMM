@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta
 
 class DamageableMetaConfig(section: ConfigurationSection) : ItemMetaConfig(Damageable::class) {
     val value = section.getObject("value", 0).toString()
-    val max = section.getObject("max", 0).toString()
+    val max = section.getObject("max")?.toString() ?: "-1"
 
     override fun storeData(item: MenuItemView, player: TabPlayer) = mapOf(
         "value" to property(item, player, value),
@@ -23,7 +23,11 @@ class DamageableMetaConfig(section: ConfigurationSection) : ItemMetaConfig(Damag
         if (value.update() || force) meta.damage = value.get().toIntOrNull() ?: 0
 
         val max = data["max"]!!
-        if (max.update() || force) meta.setMaxDamage(max.get().toIntOrNull() ?: 0)
+        if (max.update() || force) {
+            val m = max.get().toIntOrNull() ?: 0
+            if (m == -1) meta.resetDamage()
+            meta.setMaxDamage(m)
+        }
     }
 
 }

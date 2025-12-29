@@ -1,4 +1,4 @@
-package io.tanguygab.yarmm.config.menu.meta
+package io.tanguygab.yarmm.config.menu.meta.banner
 
 import io.tanguygab.yarmm.config.menu.ItemMetaConfig
 import io.tanguygab.yarmm.inventory.MenuItemView

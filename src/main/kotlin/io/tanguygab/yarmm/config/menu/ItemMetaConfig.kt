@@ -3,6 +3,10 @@ package io.tanguygab.yarmm.config.menu
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import io.tanguygab.yarmm.config.menu.meta.*
+import io.tanguygab.yarmm.config.menu.meta.banner.BannerMetaConfig
+import io.tanguygab.yarmm.config.menu.meta.banner.ShieldMetaConfig
+import io.tanguygab.yarmm.config.menu.meta.firework.FireworkMetaConfig
+import io.tanguygab.yarmm.config.menu.meta.firework.FireworkStarMetaConfig
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.config.file.ConfigurationSection
@@ -35,12 +39,12 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
             "compass" to CompassMetaConfig::class,
             "damage" to DamageableMetaConfig::class,
 
-//            "FireworkEffectMeta" to null,
-//            "FireworkMeta" to null,
-//
+            "firework-star" to FireworkStarMetaConfig::class,
+            "firework" to FireworkMetaConfig::class,
+
             "patterns" to BannerMetaConfig::class,
             "shield-color" to ShieldMetaConfig::class,
-//
+
 //            "CrossbowMeta" to null,
 //            "BundleMeta" to null
 

@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionType
 
 class PotionMetaConfig(section: ConfigurationSection) : ItemMetaConfig(PotionMeta::class) {
     val type = section.getString("type") ?: "water"
-    val color = section.getString("color", "")
+    val color = section.getString("color") ?: ""
     val effects = section.getStringList("effects") ?: emptyList()
 
     override fun storeData(item: MenuItemView, player: TabPlayer) = mapOf(

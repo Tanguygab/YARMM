@@ -1,4 +1,4 @@
-package io.tanguygab.yarmm.config.menu.meta
+package io.tanguygab.yarmm.config.menu.meta.banner
 
 import io.papermc.paper.registry.RegistryKey
 import io.tanguygab.yarmm.config.menu.ItemMetaConfig
