@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
+import io.github.tanguygab.conditionalactions.ConditionalActions
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
@@ -18,9 +19,12 @@ import io.tanguygab.yarmm.listeners.InventoryListener
 import me.neznamy.tab.api.TabPlayer
 import me.neznamy.tab.api.event.plugin.TabLoadEvent
 import me.neznamy.tab.shared.TAB
+import me.neznamy.tab.shared.config.file.YamlConfigurationFile
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 import kotlin.math.max
 import kotlin.math.min
 
@@ -85,6 +89,28 @@ class YARMM : JavaPlugin() {
                             "\n" +
                             "<gray>${menuManager.menus.size} Menus:</gray> ${menuManager.menus.keys.joinToString(", ")} \n" +
                             "<dark_gray><strikethrough>                                                    </strikethrough>\n")
+                    Command.SINGLE_SUCCESS
+                }
+            )
+            .then(Commands.literal("share")
+                .then(Commands.argument("menu", MenuArgumentType(this))
+                    .executes {
+                        Command.SINGLE_SUCCESS
+                    }
+                )
+            )
+            .then(Commands.literal("generate-commands")
+                .executes {
+                    val ca = server.pluginManager.getPlugin("ConditionalActions")!!
+                    val file = File(ca.dataFolder, "commands/yarmm.yml")
+                    if (!file.exists()) file.createNewFile()
+                    val yaml = YamlConfigurationFile(null, file)
+
+                    val menus = menuManager.menus.keys.filter { menu -> menu !in yaml.values.keys }
+                    menus.forEach { menu -> yaml[menu] = mapOf("actions" to listOf("console: yarmm open %player% $menu %conditionalactions_args%")) }
+                    server.dispatchCommand(it.source.sender, "conditionalactions reload")
+
+                    it.source.sender.sendRichMessage("<green>${menus.size} menu commands generated!")
                     Command.SINGLE_SUCCESS
                 }
             )
