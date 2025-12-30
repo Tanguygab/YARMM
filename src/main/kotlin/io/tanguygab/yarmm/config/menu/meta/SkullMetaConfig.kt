@@ -10,8 +10,7 @@ import me.neznamy.tab.shared.platform.TabPlayer
 import org.bukkit.Bukkit
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.SkullMeta
-import java.net.URI
-import java.util.*
+import java.util.UUID
 import kotlin.io.encoding.Base64
 
 class SkullMetaConfig(val head: String) : ItemMetaConfig(SkullMeta::class) {

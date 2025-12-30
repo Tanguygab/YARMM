@@ -16,7 +16,6 @@ import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.meta.ItemMeta
 import kotlin.reflect.KClass
-import kotlin.text.removePrefix
 
 fun <T : Keyed> String.getFromRegistry(registryKey: RegistryKey<T>): T? {
     val key = NamespacedKey.fromString(lowercase()) ?: return null

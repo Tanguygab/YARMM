@@ -8,13 +8,6 @@ close-actions:
   - "message: <red>Closing default menu!"
 
 items:
-  filler:
-    material: GRAY_STAINED_GLASS_PANE
-    slots:
-      - 0-9
-      - 17-18
-      - 26-27
-      - 35-44
   diamond:
     material: diamond
     slot: 22
@@ -37,3 +30,10 @@ items:
       - "Click to close the menu."
     click-actions:
       - close
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    slots:
+      - 0-9
+      - 17-18
+      - 26-27
+      - 35-44

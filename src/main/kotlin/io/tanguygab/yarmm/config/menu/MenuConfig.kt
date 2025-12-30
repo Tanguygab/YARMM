@@ -2,7 +2,6 @@ package io.tanguygab.yarmm.config.menu
 
 import io.github.tanguygab.conditionalactions.ConditionalActions
 import io.github.tanguygab.conditionalactions.actions.ActionGroup
-import io.tanguygab.yarmm.config.MainConfig
 import me.neznamy.tab.shared.config.file.YamlConfigurationFile
 import org.bukkit.event.inventory.InventoryType
 import java.io.File
@@ -31,6 +30,7 @@ data class MenuConfig(
                 items = file.getMap<String, Any>("items").keys
                     .map { file.getConfigurationSection("items.$it") }
                     .map { MenuItemConfig.fromSection(it) }
+                    .asReversed()
             )
         }
     }

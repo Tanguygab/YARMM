@@ -106,7 +106,7 @@ class MenuItemView(
                 .filter { it.isMeta(this) }
                 .forEach { it.refresh(this, data.meta[this@MenuItemView]!![it]!!, force) }
         }
-        if (visible) inventory?.setItem(getSlot(), item)
+        if (session.items.findLast { it.getSlot() == getSlot() && it.isVisible() } == this) inventory?.setItem(getSlot(), item)
     }
 
     companion object {

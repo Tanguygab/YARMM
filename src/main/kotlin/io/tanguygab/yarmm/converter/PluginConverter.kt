@@ -1,18 +1,20 @@
 package io.tanguygab.yarmm.converter
 
 import io.github.tanguygab.conditionalactions.Utils
+import io.tanguygab.yarmm.YARMM
+import me.neznamy.tab.shared.chat.EnumChatFormat
 import me.neznamy.tab.shared.config.file.ConfigurationSection
 import me.neznamy.tab.shared.config.file.YamlConfigurationFile
 import org.bukkit.Bukkit
 import java.io.File
 
-abstract class PluginConverter(val folder: String, private val itemsSection: String) {
+abstract class PluginConverter(private val plugin: YARMM, val folder: String, private val itemsSection: String) {
 
     fun convert(): Boolean {
         val folder = Bukkit.getPluginsFolder().resolve(folder)
         if (folder.exists()) {
-            Utils.loadFiles(folder.parentFile, "") { file, _ ->
-                convertFile(file, Bukkit.getPluginsFolder().resolve("YARMM/menus/converted/$file"))
+            Utils.loadFiles(folder, "") { file, _ ->
+                convertFile(file, Bukkit.getPluginsFolder().resolve("YARMM/menus/converted/${folder.parentFile.name}/${file.path.substringAfter(this.folder)}"))
             }
             return true
         }
@@ -20,6 +22,8 @@ abstract class PluginConverter(val folder: String, private val itemsSection: Str
     }
 
     private fun convertFile(input: File, output: File): YamlConfigurationFile {
+        plugin.logger.info("Converting $input into $output")
+
         if (!output.exists()) {
             if (!output.parentFile.exists())
                 output.parentFile.mkdirs()
@@ -30,11 +34,14 @@ abstract class PluginConverter(val folder: String, private val itemsSection: Str
 
         val args = getArgs(old)
         convertMenu(old, new, args)
+        plugin.logger.info("Converted menu settings")
 
         val oldSection = old.getConfigurationSection(itemsSection)
-        oldSection.keys.forEach {
-            convertItem(oldSection.getConfigurationSection("$it"), new, "items.$it", args)
-        }
+        oldSection.keys
+            .map { it to oldSection.getConfigurationSection("$it") }
+            .sortedBy { (_, section) -> section.getInt("priority") ?: Integer.MAX_VALUE }
+            .forEach { (key, section) -> convertItem(section, new, "items.$key", args) }
+        plugin.logger.info("Converted ${oldSection.keys.size} menu items")
         return new
     }
 
@@ -60,6 +67,29 @@ abstract class PluginConverter(val folder: String, private val itemsSection: Str
         return list
     }
 
+    protected fun String.convert(args: Map<String, String>): String {
+        var str = this
+        args.forEach { (old, new) ->
+            while (str.contains(old)) {
+                str = str.replaceFirst(old, if (str.substringBefore(old).count { it == '%' } % 2 == 0) "%$new%" else "{$new}")
+            }
+        }
+
+        str = str.replace("§", "&")
+        for (c in EnumChatFormat.entries) {
+            var string = c.name.lowercase()
+            if (string == "underline") string += "d"
+            str = str.replace("&" + c.character, "<$string>")
+        }
+        str = str
+            .replace("&u", "<rainbow>")
+            .replace("<reset>", "<bold:false><italic:false><underlined:false><strikethrough:false><obfuscated:false><white>")
+
+        str = str.replace(rgbPattern) { "<${it.groups["rgb"]!!.value}>" }
+        return str
+    }
+
+    protected abstract val rgbPattern: Regex
     protected abstract fun getArgs(input: YamlConfigurationFile): Map<String, String>
     protected abstract fun convertMenu(input: YamlConfigurationFile, output: YamlConfigurationFile, args: Map<String, String>)
     protected abstract fun convertItem(input: ConfigurationSection, output: YamlConfigurationFile, path: String, args: Map<String, String>)

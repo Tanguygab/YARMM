@@ -31,8 +31,6 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URI
 import java.nio.charset.StandardCharsets
-import kotlin.math.max
-import kotlin.math.min
 
 val TabPlayer.bukkit get() = player as Player
 val Player.tab get() = TAB.getInstance().getPlayer(uniqueId)
@@ -43,12 +41,12 @@ class YARMM : JavaPlugin() {
     lateinit var config: MainConfig
     lateinit var lang: LangConfig
     val converters = mapOf(
-        "DeluxeMenus" to DeluxeMenusConverter()
+        "DeluxeMenus" to DeluxeMenusConverter(this)
     )
 
     private fun getMenuPage(ctx: CommandContext<CommandSourceStack>, page: Int): Int {
         val max = Math.ceilDiv(menuManager.menus.size, config.listMaxEntries)
-        val page = min(max(page, 1), max)
+        val page = page.coerceIn(1, max)
 
         var message = lang.getCommandsListHeader(menuManager.menus.size, page, max)
         menuManager.menus.keys.forEach { message = message.append(lang.getCommandsListLine(ctx.source.sender.name, it)) }
