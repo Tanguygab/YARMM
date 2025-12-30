@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemRarity
 import org.bukkit.inventory.meta.ItemMeta
 
 class TooltipMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ItemMeta::class) {
-    val hide = section.getObject("type")?.toString() ?: "false"
+    val hide = section.getObject("hide")?.toString() ?: "false"
     val style = section.getString("style") ?: ""
     val rarity = section.getString("rarity") ?: ""
     val glow = section.getObject("glow")?.toString() ?: ""

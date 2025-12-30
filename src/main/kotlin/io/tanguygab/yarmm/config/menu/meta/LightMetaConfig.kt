@@ -20,6 +20,7 @@ class LightMetaConfig(val level: String) : ItemMetaConfig(BlockDataMeta::class) 
             meta as BlockDataMeta
             val data = meta.getBlockData(Material.LIGHT) as Light
             data.level = level.get().toIntOrNull()?.coerceIn(0, data.maximumLevel) ?: data.maximumLevel
+            meta.setBlockData(data)
         }
     }
 

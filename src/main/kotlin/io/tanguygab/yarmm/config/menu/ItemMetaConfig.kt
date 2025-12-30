@@ -57,7 +57,6 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
 //            "CrossbowMeta" to null,
 //            "BundleMeta" to null
 
-//            "MapMeta" to null,
             "potion" to PotionMetaConfig::class,
             "light-level" to LightMetaConfig::class,
 
