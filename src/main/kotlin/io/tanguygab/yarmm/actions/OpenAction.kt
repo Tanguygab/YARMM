@@ -6,7 +6,7 @@ import io.tanguygab.yarmm.tab
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
-class OpenAction(val yarmm: YARMM) : Action("^(?i)open:( )?") {
+class OpenAction(val yarmm: YARMM) : Action("^(?i)open:( )?".toRegex()) {
 
     override fun getSuggestion() = "open: <menu>"
 
