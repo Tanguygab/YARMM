@@ -1,5 +1,6 @@
 package io.tanguygab.yarmm
 
+import io.github.tanguygab.conditionalactions.Utils
 import io.github.tanguygab.conditionalactions.hook.tab.ArgPlaceholders
 import io.tanguygab.yarmm.config.menu.MenuConfig
 import io.tanguygab.yarmm.inventory.MenuInventory
@@ -15,22 +16,15 @@ class MenuManager(val plugin: YARMM) {
 
     lateinit var argPlaceholders: ArgPlaceholders<PlayerPlaceholderImpl>
 
-    private fun loadFiles(file: File, path: String) {
-        if (file.isDirectory) {
-            file.listFiles().forEach { loadFiles(it, "$path${file.name}/") }
-            return
-        }
-        if (!file.name.endsWith(".yml")) return
-        val name = (if (plugin.config.includeFilePath) path.substringAfter("menus/") else "") + file.name.substringBeforeLast(".yml")
-        menus[name] = MenuInventory(name, MenuConfig.fromFile(file))
-    }
-
     fun load() {
         val folder = plugin.dataFolder.resolve( "menus")
         if (!folder.exists()) {
             YamlConfigurationFile(plugin.getResource("menus/default-menu.yml"), File(folder, "default-menu.yml"))
         }
-        loadFiles(folder, "")
+        Utils.loadFiles(folder, "") { file, path ->
+            val name = (if (plugin.config.includeFilePath) path.substringAfter("menus/") else "") + file.name.substringBeforeLast(".yml")
+            menus[name] = MenuInventory(name, MenuConfig.fromFile(file))
+        }
 
 
         argPlaceholders = object : ArgPlaceholders<PlayerPlaceholderImpl>("menu-") {
@@ -46,6 +40,7 @@ class MenuManager(val plugin: YARMM) {
     fun openMenu(player: TabPlayer, menu: MenuInventory, args: List<String> = emptyList()): MenuSession? {
         if (!closeMenu(player, MenuCloseReason.OPEN_NEW)) return sessions[player]
 
+        val args = args.map { it.replace("%", "") }
         argPlaceholders.update(player, args)
         if (!menu.config.openActions.execute(player.bukkit)) {
             sessions[player]?.close(MenuCloseReason.UNLOAD)
