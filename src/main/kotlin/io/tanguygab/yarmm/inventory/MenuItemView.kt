@@ -43,7 +43,10 @@ class MenuItemView(
                 data.lores to config.lore.joinToString("\n"),
             ))
             if (config.displayCondition != null) put(data.displayConditions, "%ca-condition:${config.displayCondition.name}%")
-        }.forEach { (map, raw) -> map[this] = Property(this, session.player, raw.replace("{slot}", slot)) }
+        }.forEach { (map, raw) -> map[this] = Property(this, session.player, raw
+            .replace("%slot%", slot)
+            .replace("{slot}", if (slot.contains("%")) "{tab_placeholder_${slot.removeSurrounding("%")}}" else slot)
+        ) }
 
         val enchantments = mutableMapOf<Property, Property>()
         config.enchantments.forEach { (enchant, level) ->

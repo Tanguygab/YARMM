@@ -38,7 +38,10 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
     fun isMeta(meta: ItemMeta) = clazz.isInstance(meta)
 
     companion object {
-        fun property(item: MenuItemView, player: TabPlayer, value: String) = Property(item, player, value)
+        fun property(item: MenuItemView, player: TabPlayer, value: String) = Property(item, player, value
+            .replace("%slot%", item.slot)
+            .replace("{slot}", if (item.slot.contains("%")) "{tab_placeholder_${item.slot.removeSurrounding("%")}}" else item.slot)
+        )
 
         val types = mutableMapOf(
             "armor" to ArmorMetaConfig::class,
