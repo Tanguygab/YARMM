@@ -66,6 +66,7 @@ class YARMM : JavaPlugin() {
 
     override fun onEnable() {
         val command = Commands.literal("yarmm")
+            .requires { it.sender.hasPermission("yarmm.command.list") }
             .then(Commands.literal("list")
                 .executes { getMenuPage(it, 1) }
                 .then(Commands.argument("page", IntegerArgumentType.integer(1))
@@ -76,6 +77,7 @@ class YARMM : JavaPlugin() {
                     .executes { getMenuPage(it, it.getArgument("page", Int::class.java)) }
             ))
             .then(Commands.literal("open")
+                .requires { it.sender.hasPermission("yarmm.command.open") }
                 .then(Commands.argument("player", ArgumentTypes.players())
                     .then(Commands.argument("menu", MenuArgumentType(this))
                         .executes { openMenu(it) }
@@ -86,6 +88,7 @@ class YARMM : JavaPlugin() {
                             }
             ))))
             .then(Commands.literal("info")
+                .requires { it.sender.hasPermission("yarmm.command.info") }
                 .executes {
                     fun version(plugin: String) = server.pluginManager.getPlugin(plugin)?.pluginMeta?.version
                     it.source.sender.sendRichMessage("<dark_gray><strikethrough>                                                    </strikethrough>\n" +
@@ -100,6 +103,7 @@ class YARMM : JavaPlugin() {
                 }
             )
             .then(Commands.literal("share")
+                .requires { it.sender.hasPermission("yarmm.command.share") }
                 .then(Commands.argument("menu", MenuArgumentType(this))
                     .executes { ctx ->
                         val menu = ctx.getArgument("menu", MenuInventory::class.java).name
@@ -124,6 +128,7 @@ class YARMM : JavaPlugin() {
                 )
             )
             .then(Commands.literal("generate-commands")
+                .requires { it.sender.hasPermission("yarmm.command.generate-commands") }
                 .executes {
                     val ca = server.pluginManager.getPlugin("ConditionalActions")!!
                     val file = File(ca.dataFolder, "commands/yarmm.yml")
@@ -139,6 +144,7 @@ class YARMM : JavaPlugin() {
                 }
             )
             .then(Commands.literal("convert")
+                .requires { it.sender.hasPermission("yarmm.command.convert") }
                 .then(Commands.argument("plugin", StringArgumentType.word())
                     .suggests { _, builder ->
                         converters.keys.forEach{ builder.suggest(it) }
