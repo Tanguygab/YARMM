@@ -11,6 +11,7 @@ import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.config.file.ConfigurationSection
 import me.neznamy.tab.shared.platform.TabPlayer
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Color
 import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
@@ -37,6 +38,8 @@ abstract class ItemMetaConfig(private val clazz: KClass<out ItemMeta>) {
     fun isMeta(meta: ItemMeta) = clazz.isInstance(meta)
 
     companion object {
+        internal val mm = MiniMessage.miniMessage()
+
         fun property(item: MenuItemView, player: TabPlayer, value: String) = Property(item, player, value
             .replace("%slot%", item.slot)
             .replace("{slot}", if (item.slot.contains("%")) "{tab_placeholder_${item.slot.removeSurrounding("%")}}" else item.slot)

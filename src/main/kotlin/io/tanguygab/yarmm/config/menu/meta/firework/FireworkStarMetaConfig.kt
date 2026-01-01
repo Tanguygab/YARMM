@@ -8,7 +8,6 @@ import org.bukkit.DyeColor
 import org.bukkit.FireworkEffect
 import org.bukkit.inventory.meta.FireworkEffectMeta
 import org.bukkit.inventory.meta.ItemMeta
-import kotlin.text.split
 
 fun String.toFireworkEffect(): FireworkEffect? {
     val args = split(" ")

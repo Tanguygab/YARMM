@@ -11,10 +11,11 @@ items:
   diamond:
     material: diamond
     slot: 22
-    name: "<blue>Diamond"
-    lore:
-      - ""
-      - "Click to receive!"
+    tooltip:
+      name: "<blue>Diamond"
+      lore:
+        - ""
+        - "Click to receive!"
     click-actions:
       - condition: "permission:reward.diamond"
         allow: "message: <red>Already claimed"
@@ -24,10 +25,11 @@ items:
   close:
     material: barrier
     slot: 40
-    name: "<dark_red>Close"
-    lore:
-      - ""
-      - "Click to close the menu."
+    tooltip:
+      name: "<dark_red>Close"
+      lore:
+        - ""
+        - "Click to close the menu."
     click-actions:
       - close
   filler:

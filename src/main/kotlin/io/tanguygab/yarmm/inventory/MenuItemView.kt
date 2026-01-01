@@ -7,7 +7,6 @@ import io.tanguygab.yarmm.config.menu.getFromRegistry
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.features.types.RefreshableFeature
 import me.neznamy.tab.shared.platform.TabPlayer
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -38,9 +37,7 @@ class MenuItemView(
             putAll(listOf(
                 data.slots to slot,
                 data.materials to config.material,
-                data.amounts to config.amount,
-                data.names to config.name,
-                data.lores to config.lore.joinToString("\n"),
+                data.amounts to config.amount
             ))
             if (config.displayCondition != null) put(data.displayConditions, "%ca-condition:${config.displayCondition.name}%")
         }.forEach { (map, raw) -> map[this] = Property(this, session.player, raw
@@ -81,9 +78,6 @@ class MenuItemView(
         val amount = data.amounts[this]!!
         if (force || amount.update()) item.amount = amount.get().toIntOrNull() ?: 1
 
-        val name = data.names[this]!!
-        val lore = data.lores[this]!!
-
         data.enchantments[this]!!.forEach { (enchant, level) ->
             val old = enchant.get()
             if (!enchant.update().or(level.update()) && !force) return@forEach
@@ -96,12 +90,6 @@ class MenuItemView(
         }
 
         item.itemMeta = item.itemMeta.apply {
-            if (force || name.update()) {
-                displayName(if (name.get().isEmpty()) null else mm.deserialize(session.plugin.config.itemNamePrefix + name.get()))
-            }
-            if (force || lore.update()) {
-                lore(if (lore.get().isEmpty()) listOf() else lore.get().split("\n").map { mm.deserialize(session.plugin.config.itemLorePrefix + it) })
-            }
             config.metas
                 .filter { it.isMeta(this) }
                 .forEach { it.refresh(this, data.meta[this@MenuItemView]!![it]!!, force) }
@@ -109,7 +97,5 @@ class MenuItemView(
         if (session.items.findLast { it.getSlot() == getSlot() && it.isVisible() } == this) inventory?.setItem(getSlot(), item)
     }
 
-    companion object {
-        private val mm = MiniMessage.miniMessage()
-    }
+
 }

@@ -1,5 +1,6 @@
 package io.tanguygab.yarmm.config.menu.meta
 
+import io.tanguygab.yarmm.YARMM
 import io.tanguygab.yarmm.config.menu.ItemMetaConfig
 import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
@@ -10,6 +11,8 @@ import org.bukkit.inventory.ItemRarity
 import org.bukkit.inventory.meta.ItemMeta
 
 class TooltipMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ItemMeta::class) {
+    val name = section.getString("name") ?: ""
+    val lore = section.getStringList("lore") ?: emptyList()
     val hide = section.getObject("hide")?.toString() ?: "false"
     val style = section.getString("style") ?: ""
     val rarity = section.getString("rarity") ?: ""
@@ -18,6 +21,8 @@ class TooltipMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ItemMeta
     // use conditions instead?
 
     override fun storeData(item: MenuItemView, player: TabPlayer) = mapOf(
+        "name" to property(item, player, name),
+        "lore" to property(item, player, lore.joinToString("\n")),
         "hide" to property(item, player, hide),
         "style" to property(item, player, style),
         "rarity" to property(item, player, rarity),
@@ -26,6 +31,15 @@ class TooltipMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ItemMeta
     )
 
     override fun refresh(meta: ItemMeta, data: Map<String, Property>, force: Boolean) {
+        val name = data["name"]!!
+        if (name.update() || force) meta.displayName(if (name.get().isEmpty()) null else mm.deserialize(YARMM.INSTANCE.config.itemNamePrefix + name.get()))
+
+        val lore = data["lore"]!!
+        if (lore.update() || force) meta.lore(
+            if (lore.get().isEmpty()) listOf()
+            else lore.get().split("\n").map { mm.deserialize(YARMM.INSTANCE.config.itemLorePrefix + it) }
+        )
+
         val hide = data["hide"]!!
         if (hide.update() || force) meta.isHideTooltip = hide.get().equals("true", ignoreCase = true)
 
@@ -41,5 +55,4 @@ class TooltipMetaConfig(section: ConfigurationSection) : ItemMetaConfig(ItemMeta
         val unbreakable = data["unbreakable"]!!
         if (unbreakable.update() || force) meta.isUnbreakable = unbreakable.get().equals("true", ignoreCase = true)
     }
-
 }

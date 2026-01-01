@@ -32,9 +32,7 @@ class DeluxeMenusConverter(plugin: YARMM) : PluginConverter(plugin, "DeluxeMenus
 
     override fun convertItem(input: ConfigurationSection, output: YamlConfigurationFile, path: String, args: Map<String, String>) {
         output["$path.material"] = input.getString("material")?.convert(args)
-        output["$path.name"] = input.getString("display_name")?.convert(args)
         output["$path.amount"] = input.getString("dynamic_amount")?.convert(args) ?: input.getObject("amount")
-        output["$path.lore"] = input.getStringList("lore")?.map { it.convert(args) }
         output["$path.slot"] = input.getObject("slot")?.toString()?.convert(args)
         output["$path.slots"] = input.getStringList("slots")?.map { it.convert(args) }
         output["$path.enchantments"] = input.getStringList("enchantments")?.map { it.split(";") }?.associate { it[0] to it[1] }
@@ -93,7 +91,9 @@ class DeluxeMenusConverter(plugin: YARMM) : PluginConverter(plugin, "DeluxeMenus
         }
 
 
-        if (input.keys.any { it in listOf("hide_tooltip", "tooltip_style", "rarity", "enchantment_glint_override", "unbreakable") }) {
+        if (input.keys.any { it in listOf("display_name", "lore", "hide_tooltip", "tooltip_style", "rarity", "enchantment_glint_override", "unbreakable") }) {
+            output["$path.tooltip.name"] = input.getString("display_name")?.convert(args)
+            output["$path.tooltip.lore"] = input.getStringList("lore")?.map { it.convert(args) }
             output["$path.tooltip.hide"] = input.getObject("hide_tooltip")?.toString()?.convert(args)
             output["$path.tooltip.style"] = input.getString("tooltip_style")?.convert(args)
             output["$path.tooltip.rarity"] = input.getString("rarity")?.convert(args)

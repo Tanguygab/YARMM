@@ -65,6 +65,7 @@ class YARMM : JavaPlugin() {
     }
 
     override fun onEnable() {
+        INSTANCE = this
         val command = Commands.literal("yarmm")
             .requires { it.sender.hasPermission("yarmm.command.list") }
             .then(Commands.literal("list")
@@ -198,5 +199,7 @@ class YARMM : JavaPlugin() {
     companion object {
         const val PASTE_URL = "https://paste.helpch.at/"
         val gson = Gson()
+
+        lateinit var INSTANCE: YARMM
     }
 }

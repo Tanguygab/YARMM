@@ -11,9 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 
 class MenuSession(
-    val plugin: YARMM,
+    private val plugin: YARMM,
     val player: TabPlayer,
-    val menu: MenuInventory
+    private val menu: MenuInventory
 ) : RefreshableFeature() {
 
     override fun getFeatureName() = "YARMM"
@@ -81,8 +81,6 @@ data class MenuData(
     val title: Property,
     val materials: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val amounts: MutableMap<MenuItemView, Property> = mutableMapOf(),
-    val names: MutableMap<MenuItemView, Property> = mutableMapOf(),
-    val lores: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val slots: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val displayConditions: MutableMap<MenuItemView, Property> = mutableMapOf(),
     val enchantments: MutableMap<MenuItemView, Map<Property, Property>> = mutableMapOf(),

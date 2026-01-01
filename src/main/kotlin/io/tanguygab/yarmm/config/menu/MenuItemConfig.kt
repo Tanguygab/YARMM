@@ -8,9 +8,7 @@ import org.bukkit.inventory.ItemFlag
 
 data class MenuItemConfig(
     val material: String,
-    val name: String,
     val amount: String,
-    val lore: List<String>,
     val slots: List<String>,
 
     val clickActions: ActionGroup,
@@ -23,9 +21,7 @@ data class MenuItemConfig(
     companion object {
         fun fromSection(section: ConfigurationSection) = MenuItemConfig(
             material = section.getString("material") ?: "STONE",
-            name = section.getString("name") ?: "",
             amount = section.getString("amount") ?: "1",
-            lore = section.getStringList("lore") ?: emptyList(),
             slots = getSlotRanges(section),
 
             clickActions = getActionGroup(section.getObject("click-actions") ?: emptyList<Any>()),
