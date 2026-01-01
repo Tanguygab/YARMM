@@ -22,16 +22,21 @@ class MenuSession(
     val data = MenuData(Property(this, player, menu.config.title))
 
     lateinit var inventory: Inventory
-    val items = mutableListOf<MenuItemView>()
+    val items: List<MenuItemView>
 
     init {
+        val items = mutableListOf<MenuItemView>()
         menu.config.items.forEach { item ->
             item.slots.forEach { slot ->
-                val i = MenuItemView(item, slot, this)
-                items.add(i)
-                TAB.getInstance().featureManager.registerFeature("menu-item-${player.name}-${slot}", i)
+                items.add(MenuItemView(item, slot, this))
             }
         }
+        this.items = items.toList()
+        items.forEach {
+            it.refresh(player, true)
+            TAB.getInstance().featureManager.registerFeature("menu-item-${player.name}-${it.slot}", it)
+        }
+
         TAB.getInstance().featureManager.registerFeature("menu-session-${player.name}", this)
         refresh(player, true)
     }

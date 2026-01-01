@@ -54,8 +54,6 @@ class MenuItemView(
         data.enchantments[this] = enchantments
 
         data.meta[this] = config.metas.associateWith { it.storeData(this, session.player) }
-
-        refresh(session.player, true)
     }
 
     override fun refresh(player: TabPlayer, force: Boolean) {
