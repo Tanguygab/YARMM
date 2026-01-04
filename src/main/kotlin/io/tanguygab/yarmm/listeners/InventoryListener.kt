@@ -52,16 +52,17 @@ class InventoryListener(val plugin: YARMM) : Listener {
         if (player !is Player || player.tab !in sessions) return
         e.isCancelled = true
 
-        val tab = player.tab!!
-        sessions[tab]!!.items
-            .findLast { it.getSlot() == e.rawSlot && it.isVisible() }
-            ?.let { item -> plugin.server.asyncScheduler.runNow(plugin) {
-                Thread.currentThread().let {
-                    clickPlaceholder.updateValue(e.click.name)
-                    item.config.clickActions.execute(player)
-                    clickPlaceholder.updateValue(null)
-                }
-            } }
+        val item = sessions[player.tab!!]!!.items.findLast { it.getSlot() == e.rawSlot && it.isVisible() }
+        if (item == null || item.isOnCooldown()) return
+
+        item.lastClick = System.currentTimeMillis()
+        plugin.server.asyncScheduler.runNow(plugin) {
+            Thread.currentThread().let {
+                clickPlaceholder.updateValue(e.click.name)
+                item.config.clickActions.execute(player)
+                clickPlaceholder.updateValue(null)
+            }
+        }
     }
 
 //    @EventHandler

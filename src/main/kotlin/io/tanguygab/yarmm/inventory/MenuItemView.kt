@@ -2,6 +2,7 @@ package io.tanguygab.yarmm.inventory
 
 import io.papermc.paper.registry.RegistryKey
 import io.tanguygab.yarmm.MenuSession
+import io.tanguygab.yarmm.YARMM
 import io.tanguygab.yarmm.config.menu.MenuItemConfig
 import io.tanguygab.yarmm.config.menu.getFromRegistry
 import me.neznamy.tab.shared.Property
@@ -28,7 +29,10 @@ class MenuItemView(
             field = value
             value?.setItem(getSlot(), item)
         }
+    private var cooldown = -1
+    var lastClick = 0L
 
+    fun isOnCooldown() = System.currentTimeMillis() - lastClick < cooldown
     fun getSlot() = data.slots[this]!!.get().toIntOrNull() ?: 0
     fun isVisible() = (data.displayConditions[this]?.get() ?: "true") == "true"
 
@@ -37,7 +41,8 @@ class MenuItemView(
             putAll(listOf(
                 data.slots to slot,
                 data.materials to config.material,
-                data.amounts to config.amount
+                data.amounts to config.amount,
+                data.clickCooldown to config.clickCooldown
             ))
             if (config.displayCondition != null) put(data.displayConditions, "%ca-condition:${config.displayCondition.name}%")
         }.forEach { (map, raw) -> map[this] = Property(this, session.player, raw
@@ -62,6 +67,12 @@ class MenuItemView(
 
         data.displayConditions[this]?.update()
         val visible = isVisible()
+
+        val clickCooldown = data.clickCooldown[this]!!
+        if (clickCooldown.update() || force) {
+            cooldown = clickCooldown.get().toIntOrNull() ?: -1
+            if (cooldown < 0) cooldown = YARMM.INSTANCE.config.itemClickCooldown
+        }
 
         if ((data.slots[this]!!.update() || !visible) && inventory?.getItem(oldSlot) == item) {
             inventory?.setItem(oldSlot, session.items.findLast { it.getSlot() == oldSlot && it.isVisible() }?.item)

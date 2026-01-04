@@ -11,6 +11,7 @@ data class MenuItemConfig(
     val amount: String,
     val slots: List<String>,
 
+    val clickCooldown: String,
     val clickActions: ActionGroup,
     val displayCondition: ConditionGroup?,
 
@@ -24,6 +25,7 @@ data class MenuItemConfig(
             amount = section.getString("amount") ?: "1",
             slots = getSlotRanges(section),
 
+            clickCooldown = section.getObject("click-cooldown")?.toString() ?: "-1",
             clickActions = getActionGroup(section.getObject("click-actions") ?: emptyList<Any>()),
             displayCondition = section.getString("display-condition")?.let { ConditionGroup(ConditionalActions.INSTANCE.conditionManager, it) },
 
