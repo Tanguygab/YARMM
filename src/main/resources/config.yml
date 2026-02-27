@@ -1,5 +1,5 @@
-item-name-prefix: "<white>"
-item-lore-prefix: "<gray><underlined:false>"
+item-name-prefix: "<white><italic:false>"
+item-lore-prefix: "<gray>"
 
 list-max-entries: 10
 

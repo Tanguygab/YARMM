@@ -8,8 +8,8 @@ class MainConfig(plugin: YARMM) : YamlConfigurationFile(
     plugin.getResource("config.yml"),
     File(plugin.dataFolder, "config.yml")
 ) {
-    val itemNamePrefix = getString("item-name-prefix", "<white>")!!
-    val itemLorePrefix = getString("item-lore-prefix", "<gray><underlined:false>")!!
+    val itemNamePrefix = getString("item-name-prefix", "<white><italic:false>")!!
+    val itemLorePrefix = getString("item-lore-prefix", "<gray>")!!
     val itemClickCooldown = getInt("item-click-cooldown", 1000)!!
 
     val listMaxEntries = getInt("list-max-entries", 10)!!
