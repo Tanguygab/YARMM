@@ -8,6 +8,7 @@ import me.neznamy.tab.shared.TAB
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
@@ -62,7 +63,7 @@ class InventoryListener(val plugin: YARMM) : Listener {
         item.lastClick = System.currentTimeMillis()
         plugin.server.asyncScheduler.runNow(plugin) {
             Thread.currentThread().let {
-                clickPlaceholder.updateValue(e.click.name)
+                clickPlaceholder.updateValue(e.click.name + if (e.click == ClickType.NUMBER_KEY) "_${e.hotbarButton}" else "")
                 item.config.clickActions.execute(player)
                 clickPlaceholder.updateValue(null)
             }
