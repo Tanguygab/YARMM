@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "io.tanguygab"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 dependencies {
     compileOnly(libs.paper)
     compileOnly(libs.conditionalactions)
-    compileOnly(files("../../dependencies/TAB-5.5.0.jar"))
+    compileOnly(files("../../dependencies/TAB.jar"))
 }
 
 kotlin {
@@ -23,7 +23,9 @@ kotlin {
 
 tasks.processResources {
     filteringCharset = "UTF-8"
+    val props = mapOf("version" to version)
+    inputs.properties(props)
     filesMatching("plugin.yml") {
-        expand("version" to version)
+        expand(props)
     }
 }

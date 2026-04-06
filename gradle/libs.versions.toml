@@ -1,7 +1,7 @@
 [versions]
-kotlin = "2.3.0-RC3"
+kotlin = "2.3.20"
 paper = "1.21.11-R0.1-SNAPSHOT"
-conditionalactions = "1.4.0"
+conditionalactions = "1.6.4"
 
 [libraries]
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }

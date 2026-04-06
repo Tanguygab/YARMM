@@ -6,6 +6,7 @@ import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.TAB
 import me.neznamy.tab.shared.features.types.RefreshableFeature
+import me.neznamy.tab.shared.placeholders.types.TabPlaceholder
 import me.neznamy.tab.shared.platform.TabPlayer
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
@@ -72,10 +73,11 @@ class MenuSession(
 
         closed = reason
         TAB.getInstance().featureManager.apply {
-            val usages = TAB.getInstance().placeholderManager.placeholderUsage.values
-            usages.forEach {
-                it.removeAll(items.toSet())
-                it.remove(this@MenuSession)
+            val placeholders = TAB.getInstance().placeholderManager.usedPlaceholders
+            placeholders.forEach {
+                val features = it.handle.usedByFeatures
+                features.removeAll(items.toSet())
+                features.remove(this@MenuSession)
             }
             items.forEach { item -> unregisterFeature("menu-item-${player.name}-${item.slot}") }
             unregisterFeature("menu-session-${player.name}")

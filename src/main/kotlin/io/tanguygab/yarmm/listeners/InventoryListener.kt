@@ -15,7 +15,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 class InventoryListener(val plugin: YARMM) : Listener {
 
     val sessions get() = plugin.menuManager.sessions
-    val clickPlaceholder = TAB.getInstance().placeholderManager.registerPlaceholder(ThreadPlaceholder("%menu-click%"))!!
+    val clickPlaceholder = ThreadPlaceholder("%menu-click%")
+
+    init {
+        TAB.getInstance().placeholderManager.registerPlaceholder(clickPlaceholder)
+    }
 
     @EventHandler
     fun onMenuOpen(e: InventoryOpenEvent) {
