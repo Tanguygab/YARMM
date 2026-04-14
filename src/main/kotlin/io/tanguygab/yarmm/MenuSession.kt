@@ -34,13 +34,14 @@ class MenuSession(
             }
         }
         this.items = items.toList()
-        items.forEach {
-            it.refresh(player, true)
-            TAB.getInstance().featureManager.registerFeature("menu-item-${player.name}-${it.slot}", it)
+        TAB.getInstance().cpu.runMeasuredTask(featureName, "Opening menu") {
+            items.forEach {
+                it.refresh(player, true)
+                TAB.getInstance().featureManager.registerFeature("menu-item-${player.name}-${it.slot}", it)
+            }
+            TAB.getInstance().featureManager.registerFeature("menu-session-${player.name}", this)
+            refresh(player, true)
         }
-
-        TAB.getInstance().featureManager.registerFeature("menu-session-${player.name}", this)
-        refresh(player, true)
     }
 
     fun TabPlayer.openInventory() {
@@ -72,15 +73,17 @@ class MenuSession(
         }
 
         closed = reason
-        TAB.getInstance().featureManager.apply {
-            val placeholders = TAB.getInstance().placeholderManager.usedPlaceholders
-            placeholders.forEach {
-                val features = it.handle.usedByFeatures
-                features.removeAll(items.toSet())
-                features.remove(this@MenuSession)
+        TAB.getInstance().cpu.runMeasuredTask(featureName, "Closing menu") {
+            TAB.getInstance().featureManager.apply {
+                val placeholders = TAB.getInstance().placeholderManager.usedPlaceholders
+                placeholders.forEach {
+                    val features = it.handle.usedByFeatures
+                    features.removeAll(items.toSet())
+                    features.remove(this@MenuSession)
+                }
+                items.forEach { item -> unregisterFeature("menu-item-${player.name}-${item.slot}") }
+                unregisterFeature("menu-session-${player.name}")
             }
-            items.forEach { item -> unregisterFeature("menu-item-${player.name}-${item.slot}") }
-            unregisterFeature("menu-session-${player.name}")
         }
 
         // Prevent cursor position from resetting when changing menu
