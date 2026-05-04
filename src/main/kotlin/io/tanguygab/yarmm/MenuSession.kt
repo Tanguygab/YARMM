@@ -6,10 +6,8 @@ import io.tanguygab.yarmm.inventory.MenuItemView
 import me.neznamy.tab.shared.Property
 import me.neznamy.tab.shared.TAB
 import me.neznamy.tab.shared.features.types.RefreshableFeature
-import me.neznamy.tab.shared.placeholders.types.TabPlaceholder
 import me.neznamy.tab.shared.platform.TabPlayer
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.Inventory
 
 class MenuSession(
     private val plugin: YARMM,
@@ -22,7 +20,7 @@ class MenuSession(
 
     val data = MenuData(Property(this, player, menu.config.title))
 
-    lateinit var inventory: Inventory
+    var inventory = plugin.server.createInventory(player.bukkit, 9) // Default empty menu
     var closed: MenuCloseReason? = null
     val items: List<MenuItemView>
 
