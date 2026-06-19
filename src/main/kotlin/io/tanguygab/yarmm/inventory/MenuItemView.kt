@@ -27,7 +27,7 @@ class MenuItemView(
     var inventory: Inventory? = null
         set(value) {
             field = value
-            value?.setItem(getSlot(), item)
+            if (isVisible()) value?.setItem(getSlot(), item)
         }
     private var cooldown = -1
     var lastClick = 0L
